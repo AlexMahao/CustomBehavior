@@ -33,21 +33,11 @@ public class NestParent extends LinearLayout implements NestedScrollingParent {
 
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+        // target
         // 滑动的child  , 目标child , 两者唯一
         // child  嵌套滑动的子控件(当前控件的子控件) ， target ， 手指触摸的控件
         Log.i(TAG, "onStartNestedScroll:" + child.getClass().getSimpleName() + ":" + target.getClass().getSimpleName());
         return true;
-    }
-
-    @Override
-    public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
-        mParentHelper.onNestedScrollAccepted(child, target, nestedScrollAxes);
-    }
-
-    @Override
-    public void onStopNestedScroll(View target) {
-        Log.i(TAG, "onStopNestedScroll" + target.getClass().getSimpleName());
-        mParentHelper.onStopNestedScroll(target);
     }
 
     @Override
@@ -59,12 +49,14 @@ public class NestParent extends LinearLayout implements NestedScrollingParent {
     }
 
     @Override
-    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        Log.i(TAG, "onNestedPreScroll" + target.getClass().getSimpleName());
-        // 开始滑动之前
-        Log.i(TAG, consumed[0] + ":" + consumed[1]);
-//        consumed[1] = 10;// 消费10px
+    public void onStopNestedScroll(View target) {
+        Log.i(TAG, "onStopNestedScroll" + target.getClass().getSimpleName());
+        mParentHelper.onStopNestedScroll(target);
+    }
 
+    @Override
+    public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
+        mParentHelper.onNestedScrollAccepted(child, target, nestedScrollAxes);
     }
 
     @Override

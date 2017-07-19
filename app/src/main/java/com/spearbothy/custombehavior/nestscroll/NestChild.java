@@ -105,9 +105,11 @@ public class NestChild extends View implements NestedScrollingChild {
                 int y = (int) event.getRawY();
                 // 计算y值的偏移
                 int offsetY = y - mOldY;
+                // dy
                 Log.i(TAG, mConsumed[0] + ":" + mConsumed[1] + "--" + mOffset[0] + ":" + mOffset[1]);
                 // 通知父类，如果返回true，表示父类消耗了触摸
                 if (dispatchNestedPreScroll(0, offsetY, mConsumed, mOffset)) {
+                    // dy:   mConsumed[1]:
                     offsetY -= mConsumed[1];
                 }
                 int unConsumed = 0;
