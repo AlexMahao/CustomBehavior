@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public abstract class VerticalBehavior<T extends View> extends CoordinatorLayout
         mContext = context;
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(CoordinatorLayout parent, T child, MotionEvent ev) {
+        return super.onInterceptTouchEvent(parent, child, ev);
+    }
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, T child, int layoutDirection) {
