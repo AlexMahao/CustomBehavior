@@ -21,14 +21,26 @@ public class HeaderBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     @Override
+    public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, View child, View directTargetChild, View target, int nestedScrollAxes) {
+        Log.i(TAG, "onStartNestedScroll");
+        return true;
+    }
+
+    @Override
+    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
+        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
+        Log.i(TAG, "onNestedPreScroll");
+    }
+
+    @Override
     public boolean onLayoutChild(CoordinatorLayout parent, View child, int layoutDirection) {
         Log.i(TAG, "onLayoutChild");
         // getDependents 获取依赖child
         List<View> dependents = parent.getDependents(child);
+
         for (View dependent : dependents) {
             logClass(dependent.getClass());
         }
-
         return super.onLayoutChild(parent, child, layoutDirection);
     }
 

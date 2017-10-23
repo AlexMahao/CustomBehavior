@@ -1,4 +1,4 @@
-package com.spearbothy.custombehavior.behavior;
+package com.spearbothy.custombehavior.alipay;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -9,44 +9,32 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
-import com.spearbothy.custombehavior.R;
-
 import java.util.List;
 
 /**
- * Created by mahao on 17-7-20.
+ * Created by mahao on 17-9-5.
  */
 
-public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
+public abstract class VerticalBehavior<T extends View> extends CoordinatorLayout.Behavior<T> {
 
-    private static final String TAG = CustomBehavior.class.getSimpleName();
+    protected View mDependOnView;
+    protected Context mContext;
 
-    public CustomBehavior(Context context, AttributeSet attrs) {
+    public VerticalBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
     }
 
 
     @Override
-    public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, View child, View directTargetChild, View target, int nestedScrollAxes) {
-        Log.i(TAG, "onStartNestedScroll");
-        return true;
-    }
-
-    @Override
-    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
-        Log.i(TAG, "onNestedPreScroll");
-    }
-
-    @Override
-    public boolean onLayoutChild(CoordinatorLayout parent, View child, int layoutDirection) {
-        Log.i(TAG, "onLayoutChild");
+    public boolean onLayoutChild(CoordinatorLayout parent, T child, int layoutDirection) {
         // getDependencies  获取child 依赖的view
         List<View> dependencies = parent.getDependencies(child);
 
         View header = findFirstDependency(dependencies);
 
         if (header != null) {
+            mDependOnView = header;
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
             Rect available = new Rect();
             available.set(parent.getPaddingLeft() + lp.leftMargin,
@@ -61,6 +49,7 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
         } else {
             super.onLayoutChild(parent, child, layoutDirection);
         }
+        Log.i("info", "onLayoutChild");
         return true;
     }
 
@@ -78,30 +67,6 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
         return gravity == Gravity.NO_GRAVITY ? GravityCompat.START | Gravity.TOP : gravity;
     }
 
-    @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency) {
-        Log.i(TAG, "layoutDependsOn");
-        return true;
-    }
+    protected abstract View findFirstDependency(List<View> views);
 
-    private View findFirstDependency(List<View> views) {
-        for (View view : views) {
-            if (view.getId() == R.id.header) {
-                return view;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, View child, View dependency) {
-        Log.i(TAG, "onDependentViewChanged");
-        logClass(dependency.getClass());
-        child.setTranslationY(dependency.getTranslationY());
-        return true;
-    }
-
-    public void logClass(Class clazz) {
-        Log.i(TAG, clazz.getSimpleName());
-    }
 }
