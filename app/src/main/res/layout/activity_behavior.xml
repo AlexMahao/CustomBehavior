@@ -7,17 +7,16 @@
         android:id="@+id/header"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:layout_behavior=".behavior.HeaderBehavior"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:background="#ff00ff" />
-
+        android:background="#ff00ff"
+        app:layout_behavior=".behavior.HeaderBehavior" />
     <View
+        android:id="@+id/bottom"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:background="#33f0ff"
-        app:layout_behavior=".behavior.CustomBehavior" />
-
+        app:layout_behavior=".behavior.BottomBehavior" />
 </android.support.design.widget.CoordinatorLayout>

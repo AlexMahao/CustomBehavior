@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.GravityCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -17,35 +16,23 @@ import java.util.List;
  * Created by mahao on 17-7-20.
  */
 
-public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
-
-    private static final String TAG = CustomBehavior.class.getSimpleName();
-
-    public CustomBehavior(Context context, AttributeSet attrs) {
+public class BottomBehavior extends CoordinatorLayout.Behavior<View> {
+    public BottomBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
-
+    // =============== 根本：添加依赖 =============================
     @Override
-    public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, View child, View directTargetChild, View target, int nestedScrollAxes) {
-        Log.i(TAG, "onStartNestedScroll");
-        return true;
+    public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency) {
+        return dependency.getId() == R.id.header;
     }
 
-    @Override
-    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
-        Log.i(TAG, "onNestedPreScroll");
-    }
-
+    // ================ 第一部分：定位 ========================
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, View child, int layoutDirection) {
-        Log.i(TAG, "onLayoutChild");
         // getDependencies  获取child 依赖的view
         List<View> dependencies = parent.getDependencies(child);
-
+//        parent.getDependents(child)  // 获取依赖child 的控件
         View header = findFirstDependency(dependencies);
-
         if (header != null) {
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
             Rect available = new Rect();
@@ -56,7 +43,6 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
             final Rect out = new Rect();
             GravityCompat.apply(resolveGravity(getFinalGravity(lp.gravity)), child.getMeasuredWidth(),
                     child.getMeasuredHeight(), available, out, layoutDirection);
-
             child.layout(out.left, out.top, out.right, out.bottom);
         } else {
             super.onLayoutChild(parent, child, layoutDirection);
@@ -65,6 +51,7 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     public int getFinalGravity(int gravity) {
+        // 获取当前控件的`layout_gravity`属性
         if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == 0) {
             gravity = gravity | Gravity.TOP;
         }
@@ -78,13 +65,8 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
         return gravity == Gravity.NO_GRAVITY ? GravityCompat.START | Gravity.TOP : gravity;
     }
 
-    @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency) {
-        Log.i(TAG, "layoutDependsOn");
-        return true;
-    }
-
     private View findFirstDependency(List<View> views) {
+        // 查找最根本的依赖
         for (View view : views) {
             if (view.getId() == R.id.header) {
                 return view;
@@ -92,16 +74,10 @@ public class CustomBehavior extends CoordinatorLayout.Behavior<View> {
         }
         return null;
     }
-
+    // ================ 第二部分：监听移动 ========================
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, View child, View dependency) {
-        Log.i(TAG, "onDependentViewChanged");
-        logClass(dependency.getClass());
         child.setTranslationY(dependency.getTranslationY());
         return true;
-    }
-
-    public void logClass(Class clazz) {
-        Log.i(TAG, clazz.getSimpleName());
     }
 }

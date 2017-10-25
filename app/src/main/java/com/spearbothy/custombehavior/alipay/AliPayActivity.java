@@ -23,9 +23,7 @@ import java.util.List;
 
 public class AliPayActivity extends AppCompatActivity {
 
-
     private RecyclerView mRecycler;
-
     private List<String> mData = new ArrayList<>();
     private MyAdapter mAdapter;
     private SwipeRefreshLayout mRefreshLayout;
@@ -55,7 +53,6 @@ public class AliPayActivity extends AppCompatActivity {
                     }
                 }, 2000);
             }
-
         });
     }
 
